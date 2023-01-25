@@ -1,8 +1,3 @@
-"""
-     Author: Gianfranco Molinari
- Assignment: Assignment 10
-Submit Date: 11/14/21
-"""
 import json
 import requests
 from tkinter import *
