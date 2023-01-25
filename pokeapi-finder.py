@@ -1,10 +1,14 @@
+"""
+Uses tkinter to make a search module that takes a Pokemon name and locates
+their stats via PokeAPI
+"""
 import json
+from tkinter import Tk, Label, Entry, Button
 import requests
-from tkinter import *
 
 
-# Class Pokemon takes a certain pokemons name, characteristics, and stats
 class Pokemon:
+    """Class Pokemon takes a certain pokemons name, characteristics, and stats"""
     def __init__(self, attack, name, pokedex_number, type1, type2):
         self.attack = attack
         self.name = name
@@ -14,12 +18,12 @@ class Pokemon:
 
     # formats Pokemon stat list
     def __str__(self):
-        return "name: {}\nid: {}\ntype1: {}\ntype2: {}\nattack: {}".format(self.name, self.pokedex_number, self.type1,
-                                                                           self.type2, self.attack)
+        return f"name: {self.name}\nid: {self.pokedex_number}\n\
+            type1: {self.type1}\ntype2: {self.type2}\nattack: {self.attack}"
 
 
-# Class Pokedex starts a tkinter GUI
 class Pokedex:
+    """Class Pokedex starts a tkinter GUI"""
     def __init__(self):
         self.root = Tk()
 
@@ -36,20 +40,21 @@ class Pokedex:
 
         self.root.mainloop()
 
-    # clickhandler method obtains the name of the entered Pokemon and tries to search the PokeAPI database
-    def clickhandler(self, evt):
+    def clickhandler(self, _evt):
+        """clickhandler method obtains name of entered Pokemon and tries to search PokeAPI"""
         name = self.enter_entry.get()  # obtains entry information
         try:
             self.search(str(name).lower())
-        except Exception as e:  # exceptions are printed if given
+        except ValueError as e:  # exceptions are printed if given
             self.results_label['text'] = e
 
     def search(self, name):
-        url = "https://pokeapi.co/api/v2/pokemon/" + name  # creates the PokeAPI URL of desired Pokemon
+        """Searches and gets data of requested Pokemon from PokeAPI"""
+        url = "https://pokeapi.co/api/v2/pokemon/" + name  # creates PokeAPI URL of desired Pokemon
         r = requests.get(url)  # checks to see if URL is valid
 
-        if r.status_code != 200:  # if Pokemon is not found with given name, then Exception is raised 
-            raise Exception("Pokemon Not Found")
+        if r.status_code != 200:  # if Pokemon isn't found with given name, ValueError is raised
+            raise ValueError("Pokemon Not Found")
 
         else:  # if name is found, data is search for and assigned
             data = json.loads(r.text)
